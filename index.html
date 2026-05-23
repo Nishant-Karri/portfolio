@@ -554,6 +554,95 @@ body:has(button:hover) #c-ring{transform:translate(-50%,-50%) scale(.6);border-c
 .footer-copy{font-size:.66rem;color:var(--text-3)}
 
 /* ─────────────────────────────────────────
+   DATABOT CHARACTER
+───────────────────────────────────────── */
+#databot{
+  position:fixed;bottom:1.8rem;right:1.8rem;z-index:500;
+  display:flex;flex-direction:column;align-items:flex-end;gap:.7rem;
+  pointer-events:none;
+}
+/* speech bubble */
+.bot-bubble{
+  max-width:240px;min-width:120px;
+  background:rgba(26,26,26,.96);
+  border:1px solid rgba(147,51,234,.35);
+  border-radius:16px 16px 4px 16px;
+  padding:.85rem 1rem;
+  font-family:var(--K);font-size:.76rem;font-weight:400;
+  color:var(--text);line-height:1.55;
+  backdrop-filter:blur(12px);
+  box-shadow:0 0 24px rgba(147,51,234,.15);
+  opacity:0;transform:translateY(8px) scale(.96);
+  transition:opacity .35s var(--ease),transform .35s var(--ease);
+  pointer-events:auto;
+  position:relative;
+}
+.bot-bubble::after{
+  content:'';position:absolute;bottom:-7px;right:18px;
+  width:12px;height:12px;
+  background:rgba(26,26,26,.96);
+  border-right:1px solid rgba(147,51,234,.35);
+  border-bottom:1px solid rgba(147,51,234,.35);
+  transform:rotate(45deg);
+}
+.bot-bubble.show{opacity:1;transform:translateY(0) scale(1)}
+.bot-bubble-text{min-height:1.2em}
+/* typing cursor */
+.bot-bubble-text::after{
+  content:'|';animation:blink-cur .75s step-end infinite;
+  color:var(--purple);margin-left:1px;font-weight:300;
+}
+.bot-bubble-text.done::after{display:none}
+@keyframes blink-cur{0%,100%{opacity:1}50%{opacity:0}}
+
+/* close button */
+.bot-bubble-close{
+  position:absolute;top:.4rem;right:.5rem;
+  font-size:.65rem;color:var(--text-3);cursor:pointer;
+  pointer-events:auto;
+  transition:color .15s;line-height:1;padding:.1rem;
+}
+.bot-bubble-close:hover{color:#fff}
+
+/* bot body */
+.bot-body{
+  width:64px;height:64px;
+  position:relative;
+  animation:bot-float 4s ease-in-out infinite;
+  pointer-events:auto;cursor:pointer;
+}
+@keyframes bot-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.bot-body.talking{animation:bot-talk 0.4s ease-in-out infinite alternate}
+@keyframes bot-talk{0%{transform:translateY(0) rotate(-2deg)}100%{transform:translateY(-4px) rotate(2deg)}}
+.bot-body.wave{animation:bot-wave .6s ease-in-out 2}
+@keyframes bot-wave{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-15deg)}75%{transform:rotate(15deg)}}
+
+/* SVG eye blink */
+.eye-inner{transform-origin:center;animation:eye-blink 5s ease-in-out infinite}
+@keyframes eye-blink{0%,90%,100%{transform:scaleY(1)}93%,97%{transform:scaleY(.05)}}
+.eye-inner-r{animation-delay:0.08s}
+/* chest pulse */
+.chest-light{animation:chest-pulse 2.2s ease-in-out infinite}
+@keyframes chest-pulse{0%,100%{opacity:.55;r:5}50%{opacity:1;r:6.5}}
+
+/* ── Audio toggle ── */
+#audio-btn{
+  position:fixed;bottom:1.8rem;left:1.8rem;z-index:500;
+  width:42px;height:42px;border-radius:50%;
+  background:rgba(26,26,26,.92);
+  border:1px solid rgba(147,51,234,.3);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;pointer-events:auto;
+  transition:border-color .2s,background .2s;
+  backdrop-filter:blur(10px);
+}
+#audio-btn:hover{border-color:rgba(217,70,239,.6);background:rgba(147,51,234,.15)}
+#audio-btn svg{width:18px;height:18px;color:#aaa;transition:color .2s}
+#audio-btn:hover svg{color:#fff}
+#audio-btn.active svg{color:var(--magenta)}
+#audio-btn.active{border-color:rgba(217,70,239,.5)}
+
+/* ─────────────────────────────────────────
    RESPONSIVE
 ───────────────────────────────────────── */
 @media(max-width:720px){
@@ -1020,6 +1109,63 @@ body:has(button:hover) #c-ring{transform:translate(-50%,-50%) scale(.6);border-c
   </div>
 </footer>
 
+<!-- ══════════════ DATABOT ══════════════ -->
+<div id="databot">
+  <div class="bot-bubble" id="bot-bubble">
+    <span class="bot-bubble-close" id="bot-close" title="Dismiss">✕</span>
+    <div class="bot-bubble-text" id="bot-text"></div>
+  </div>
+  <div class="bot-body" id="bot-body" title="Click to replay narration">
+    <svg viewBox="0 0 80 96" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
+      <!-- antenna -->
+      <line x1="40" y1="14" x2="40" y2="4" stroke="#9333ea" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="40" cy="3" r="3.5" fill="#d946ef"/>
+      <circle cx="40" cy="3" r="6" fill="#d946ef" fill-opacity=".2"/>
+      <!-- head -->
+      <rect x="10" y="16" width="60" height="46" rx="14" fill="#1c1c1c" stroke="#9333ea" stroke-width="1.5"/>
+      <!-- head glow -->
+      <rect x="10" y="16" width="60" height="46" rx="14" fill="url(#hg)" opacity=".5"/>
+      <!-- eye sockets -->
+      <circle cx="28" cy="34" r="8" fill="#0C0C0C"/>
+      <circle cx="52" cy="34" r="8" fill="#0C0C0C"/>
+      <!-- eyes -->
+      <circle cx="28" cy="34" r="5" fill="#9333ea" class="eye-inner"/>
+      <circle cx="52" cy="34" r="5" fill="#9333ea" class="eye-inner eye-inner-r"/>
+      <!-- eye shine -->
+      <circle cx="30" cy="32" r="1.5" fill="#fff" opacity=".8"/>
+      <circle cx="54" cy="32" r="1.5" fill="#fff" opacity=".8"/>
+      <!-- mouth -->
+      <path d="M26 50 Q40 59 54 50" fill="none" stroke="#9333ea" stroke-width="2" stroke-linecap="round" id="bot-mouth"/>
+      <!-- body -->
+      <rect x="18" y="64" width="44" height="28" rx="10" fill="#1c1c1c" stroke="#9333ea" stroke-width="1.5"/>
+      <!-- chest panel -->
+      <rect x="26" y="70" width="28" height="16" rx="5" fill="#0C0C0C" stroke="#333" stroke-width="1"/>
+      <!-- chest light -->
+      <circle cx="40" cy="78" r="5" fill="#d946ef" class="chest-light"/>
+      <!-- arms -->
+      <rect x="2" y="66" width="13" height="9" rx="4.5" fill="#1c1c1c" stroke="#9333ea" stroke-width="1.5"/>
+      <rect x="65" y="66" width="13" height="9" rx="4.5" fill="#1c1c1c" stroke="#9333ea" stroke-width="1.5"/>
+      <!-- legs -->
+      <rect x="22" y="93" width="12" height="3" rx="1.5" fill="#9333ea" opacity=".4"/>
+      <rect x="46" y="93" width="12" height="3" rx="1.5" fill="#9333ea" opacity=".4"/>
+      <defs>
+        <radialGradient id="hg" cx="50%" cy="30%" r="60%">
+          <stop offset="0%" stop-color="#9333ea" stop-opacity=".15"/>
+          <stop offset="100%" stop-color="#9333ea" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+    </svg>
+  </div>
+</div>
+
+<!-- audio toggle -->
+<button id="audio-btn" title="Toggle ambient audio" aria-label="Toggle audio">
+  <svg id="audio-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+    <path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07" id="audio-waves"/>
+  </svg>
+</button>
+
 <!-- ══════════════ SCRIPTS ══════════════ -->
 <script>
 /* ── cursor ── */
@@ -1127,6 +1273,268 @@ function art(id,type){
   }
 }
 art('cv1',1);art('cv2',2);art('cv3',3);
+
+/* ════════════════════════════════════════
+   DATABOT — ANIMATED CHARACTER + NARRATION
+════════════════════════════════════════ */
+const botBody    = document.getElementById('bot-body');
+const botBubble  = document.getElementById('bot-bubble');
+const botText    = document.getElementById('bot-text');
+const botClose   = document.getElementById('bot-close');
+const botMouth   = document.getElementById('bot-mouth');
+
+/* Section scripts — what DataBot says in each section */
+const SCRIPTS = {
+  hero:        "Hi there! I'm DataBot 🤖 — Nishant's AI guide. I'll walk you through his portfolio. Scroll down to explore!",
+  about:       "Nishant has 7+ years turning raw data into real decisions. Python, SQL, Azure, dbt — he covers the full modern data stack.",
+  experience:  "Three companies. Seven years. At AT&T alone he's processing 500 million records a day with 99.9% uptime. Impressive, right?",
+  services:    "Data pipelines, ML models, cloud infrastructure, and Power BI dashboards — Nishant handles the entire data lifecycle end-to-end.",
+  projects:    "These aren't toy projects — real production systems. The streaming platform alone handles half a billion events per day.",
+  education:   "Master's from UT Arlington, Bachelor's from JNTU Hyderabad. Solid academic roots meet deep hands-on execution.",
+  contact:     "Like what you see? Nishant is open to new opportunities. Go ahead — send him a message! 🚀"
+};
+
+let currentScript = null;
+let typingTimer   = null;
+let speechActive  = false;
+let dismissed     = false;
+
+/* ── Typing animation ── */
+function typeText(text, onDone) {
+  botText.classList.remove('done');
+  botText.textContent = '';
+  clearTimeout(typingTimer);
+  let i = 0;
+  function tick() {
+    if (i < text.length) {
+      botText.textContent += text[i++];
+      typingTimer = setTimeout(tick, 28);
+    } else {
+      botText.classList.add('done');
+      if (onDone) onDone();
+    }
+  }
+  tick();
+}
+
+/* ── Show bubble ── */
+function showBubble(sectionId) {
+  const msg = SCRIPTS[sectionId];
+  if (!msg || currentScript === sectionId || dismissed) return;
+  currentScript = sectionId;
+  dismissed = false;
+  botBubble.classList.add('show');
+  // wave on first appearance or section change
+  botBody.classList.remove('wave');
+  void botBody.offsetWidth; // reflow
+  botBody.classList.add('wave');
+  typeText(msg, () => {
+    botBody.classList.remove('talking');
+    setBotMood('smile');
+  });
+  botBody.classList.add('talking');
+  setBotMood('talk');
+  speak(msg);
+}
+
+/* ── Bot mouth expressions ── */
+function setBotMood(mood) {
+  if (mood === 'talk')   botMouth.setAttribute('d','M26 50 Q40 56 54 50');
+  if (mood === 'smile')  botMouth.setAttribute('d','M26 50 Q40 59 54 50');
+  if (mood === 'idle')   botMouth.setAttribute('d','M30 52 Q40 54 50 52');
+}
+
+/* ── Replay on click ── */
+botBody.addEventListener('click', () => {
+  dismissed = false;
+  if (currentScript) {
+    dismissed = false;
+    botBubble.classList.add('show');
+    botBody.classList.remove('wave');
+    void botBody.offsetWidth;
+    botBody.classList.add('wave');
+    typeText(SCRIPTS[currentScript], () => {
+      botBody.classList.remove('talking');
+      setBotMood('smile');
+    });
+    botBody.classList.add('talking');
+    setBotMood('talk');
+    speak(SCRIPTS[currentScript]);
+  }
+});
+
+botClose.addEventListener('click', (e) => {
+  e.stopPropagation();
+  botBubble.classList.remove('show');
+  dismissed = true;
+  speechSynthesis.cancel();
+  botBody.classList.remove('talking');
+  setBotMood('idle');
+});
+
+/* ── Section observer → triggers DataBot ── */
+const SECTION_MAP = {
+  'hero':       'hero',
+  'about':      'about',
+  'experience': 'experience',
+  'services':   'services',
+  'projects':   'projects',
+  'education':  'education',
+  'contact':    'contact'
+};
+const secObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const sid = SECTION_MAP[e.target.id];
+      if (sid) showBubble(sid);
+    }
+  });
+}, { threshold: 0.35 });
+
+Object.keys(SECTION_MAP).forEach(id => {
+  const el = document.getElementById(id);
+  if (el) secObserver.observe(el);
+});
+
+// Greet immediately
+setTimeout(() => showBubble('hero'), 1200);
+
+/* ════════════════════════════════════════
+   WEB SPEECH API — NARRATION
+════════════════════════════════════════ */
+let voiceReady = false;
+let preferredVoice = null;
+let speechEnabled = false; // off by default — user opts in via audio btn
+
+function loadVoices() {
+  const voices = speechSynthesis.getVoices();
+  // prefer a natural-sounding English voice
+  const preferred = ['Google UK English Female','Microsoft Zira','Samantha','Karen','Google US English'];
+  for (const name of preferred) {
+    const v = voices.find(v => v.name === name);
+    if (v) { preferredVoice = v; break; }
+  }
+  if (!preferredVoice) preferredVoice = voices.find(v => v.lang.startsWith('en')) || voices[0];
+  voiceReady = true;
+}
+speechSynthesis.addEventListener('voiceschanged', loadVoices);
+loadVoices();
+
+function speak(text) {
+  if (!speechEnabled) return;
+  speechSynthesis.cancel();
+  if (!voiceReady) loadVoices();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.voice  = preferredVoice;
+  utt.rate   = 1.05;
+  utt.pitch  = 1.1;
+  utt.volume = 0.88;
+  utt.onstart = () => { speechActive = true; botBody.classList.add('talking'); setBotMood('talk'); };
+  utt.onend   = () => { speechActive = false; botBody.classList.remove('talking'); setBotMood('smile'); };
+  speechSynthesis.speak(utt);
+}
+
+/* ════════════════════════════════════════
+   WEB AUDIO API — AMBIENT SOUNDTRACK
+════════════════════════════════════════ */
+let audioCtx = null;
+let masterGain = null;
+let audioOn = false;
+
+function buildAmbient() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  masterGain = audioCtx.createGain();
+  masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
+  masterGain.connect(audioCtx.destination);
+
+  // Pad — detuned sine oscillators (A minor drone)
+  const padFreqs = [55, 110, 146.83, 164.81, 220, 246.94, 329.63];
+  padFreqs.forEach((freq, i) => {
+    const osc   = audioCtx.createOscillator();
+    const gn    = audioCtx.createGain();
+    const filt  = audioCtx.createBiquadFilter();
+    osc.type    = i % 2 === 0 ? 'sine' : 'triangle';
+    osc.frequency.value = freq;
+    osc.detune.value    = (Math.random() - .5) * 6;
+    filt.type           = 'lowpass';
+    filt.frequency.value= 1200;
+    filt.Q.value        = 0.7;
+    gn.gain.value       = .08 / (i * .4 + 1);
+    osc.connect(filt); filt.connect(gn); gn.connect(masterGain);
+    osc.start();
+    // slow LFO vibrato
+    const lfo = audioCtx.createOscillator();
+    const lfoGain = audioCtx.createGain();
+    lfo.frequency.value = 0.18 + i * 0.04;
+    lfoGain.gain.value  = 1.2;
+    lfo.connect(lfoGain); lfoGain.connect(osc.frequency);
+    lfo.start();
+  });
+
+  // Subtle high shimmer
+  const shimmer = audioCtx.createOscillator();
+  const shimGain = audioCtx.createGain();
+  shimmer.type = 'sine';
+  shimmer.frequency.value = 880;
+  shimGain.gain.value = 0.015;
+  shimmer.connect(shimGain); shimGain.connect(masterGain);
+  shimmer.start();
+
+  // Pink-ish noise texture via filtered noise buffer
+  const bufLen = audioCtx.sampleRate * 3;
+  const noiseBuffer = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
+  const data = noiseBuffer.getChannelData(0);
+  let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+  for (let i = 0; i < bufLen; i++) {
+    const white = Math.random()*2-1;
+    b0=.99886*b0+white*.0555179; b1=.99332*b1+white*.0750759;
+    b2=.96900*b2+white*.1538520; b3=.86650*b3+white*.3104856;
+    b4=.55000*b4+white*.5329522; b5=-.7616*b5-white*.0168980;
+    data[i]=(b0+b1+b2+b3+b4+b5+b6+white*.5362)*0.11;
+    b6=white*.115926;
+  }
+  const noiseSource = audioCtx.createBufferSource();
+  noiseSource.buffer = noiseBuffer;
+  noiseSource.loop = true;
+  const noiseFilt = audioCtx.createBiquadFilter();
+  noiseFilt.type = 'bandpass';
+  noiseFilt.frequency.value = 200;
+  noiseFilt.Q.value = 0.4;
+  const noiseGain = audioCtx.createGain();
+  noiseGain.gain.value = 0.018;
+  noiseSource.connect(noiseFilt); noiseFilt.connect(noiseGain); noiseGain.connect(masterGain);
+  noiseSource.start();
+}
+
+function setAudioOn(on) {
+  audioOn = on;
+  speechEnabled = on;
+  const btn = document.getElementById('audio-btn');
+  const waves = document.getElementById('audio-waves');
+  if (on) {
+    buildAmbient();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    masterGain.gain.linearRampToValueAtTime(.55, audioCtx.currentTime + 1.5);
+    btn.classList.add('active');
+    waves.style.display = 'block';
+    // speak current section script if bubble is showing
+    if (currentScript && botBubble.classList.contains('show')) {
+      speak(SCRIPTS[currentScript]);
+    }
+  } else {
+    if (audioCtx) masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + .8);
+    speechSynthesis.cancel();
+    btn.classList.remove('active');
+    waves.style.display = 'none';
+  }
+}
+
+document.getElementById('audio-btn').addEventListener('click', () => {
+  setAudioOn(!audioOn);
+});
+// hide waves icon initially (audio off)
+document.getElementById('audio-waves').style.display = 'none';
 </script>
 </body>
 </html>
