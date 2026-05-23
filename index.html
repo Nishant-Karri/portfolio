@@ -554,76 +554,103 @@ body:has(button:hover) #c-ring{transform:translate(-50%,-50%) scale(.6);border-c
 .footer-copy{font-size:.66rem;color:var(--text-3)}
 
 /* ─────────────────────────────────────────
-   DATABOT CHARACTER
+   GUIDE CHARACTER
 ───────────────────────────────────────── */
 #databot{
-  position:fixed;bottom:1.8rem;right:1.8rem;z-index:500;
-  display:flex;flex-direction:column;align-items:flex-end;gap:.7rem;
+  position:fixed;bottom:0;right:1.5rem;z-index:500;
+  display:flex;flex-direction:column;align-items:flex-end;gap:.65rem;
   pointer-events:none;
 }
 /* speech bubble */
 .bot-bubble{
-  max-width:240px;min-width:120px;
-  background:rgba(26,26,26,.96);
-  border:1px solid rgba(147,51,234,.35);
-  border-radius:16px 16px 4px 16px;
-  padding:.85rem 1rem;
-  font-family:var(--K);font-size:.76rem;font-weight:400;
-  color:var(--text);line-height:1.55;
-  backdrop-filter:blur(12px);
-  box-shadow:0 0 24px rgba(147,51,234,.15);
-  opacity:0;transform:translateY(8px) scale(.96);
-  transition:opacity .35s var(--ease),transform .35s var(--ease);
-  pointer-events:auto;
-  position:relative;
+  max-width:250px;min-width:130px;
+  background:rgba(18,10,36,.97);
+  border:1px solid rgba(147,51,234,.4);
+  border-radius:18px 18px 4px 18px;
+  padding:.9rem 1.05rem;
+  font-family:var(--K);font-size:.78rem;font-weight:400;
+  color:var(--text);line-height:1.58;
+  backdrop-filter:blur(16px);
+  box-shadow:0 8px 32px rgba(147,51,234,.2),0 0 0 1px rgba(147,51,234,.08);
+  opacity:0;transform:translateY(10px) scale(.94);
+  transition:opacity .4s var(--ease),transform .4s var(--ease);
+  pointer-events:auto;position:relative;
 }
 .bot-bubble::after{
-  content:'';position:absolute;bottom:-7px;right:18px;
-  width:12px;height:12px;
-  background:rgba(26,26,26,.96);
-  border-right:1px solid rgba(147,51,234,.35);
-  border-bottom:1px solid rgba(147,51,234,.35);
+  content:'';position:absolute;bottom:-8px;right:22px;
+  width:14px;height:14px;
+  background:rgba(18,10,36,.97);
+  border-right:1px solid rgba(147,51,234,.4);
+  border-bottom:1px solid rgba(147,51,234,.4);
   transform:rotate(45deg);
 }
 .bot-bubble.show{opacity:1;transform:translateY(0) scale(1)}
-.bot-bubble-text{min-height:1.2em}
-/* typing cursor */
+.bot-bubble-text{min-height:1.3em}
 .bot-bubble-text::after{
   content:'|';animation:blink-cur .75s step-end infinite;
-  color:var(--purple);margin-left:1px;font-weight:300;
+  color:var(--purple);margin-left:1px;
 }
 .bot-bubble-text.done::after{display:none}
 @keyframes blink-cur{0%,100%{opacity:1}50%{opacity:0}}
-
-/* close button */
 .bot-bubble-close{
-  position:absolute;top:.4rem;right:.5rem;
-  font-size:.65rem;color:var(--text-3);cursor:pointer;
-  pointer-events:auto;
-  transition:color .15s;line-height:1;padding:.1rem;
+  position:absolute;top:.45rem;right:.55rem;
+  font-size:.62rem;color:var(--text-3);cursor:pointer;
+  pointer-events:auto;transition:color .15s;
 }
 .bot-bubble-close:hover{color:#fff}
 
-/* bot body */
+/* ── Character wrapper ── */
 .bot-body{
-  width:64px;height:64px;
+  width:140px;
   position:relative;
-  animation:bot-float 4s ease-in-out infinite;
   pointer-events:auto;cursor:pointer;
+  animation:char-float 4.5s ease-in-out infinite;
+  transform-origin:bottom center;
+  filter:drop-shadow(0 -8px 24px rgba(147,51,234,.25));
 }
-@keyframes bot-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-.bot-body.talking{animation:bot-talk 0.4s ease-in-out infinite alternate}
-@keyframes bot-talk{0%{transform:translateY(0) rotate(-2deg)}100%{transform:translateY(-4px) rotate(2deg)}}
-.bot-body.wave{animation:bot-wave .6s ease-in-out 2}
-@keyframes bot-wave{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-15deg)}75%{transform:rotate(15deg)}}
+@keyframes char-float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+.bot-body.wave{animation:char-wave 1.6s ease-in-out}
+@keyframes char-wave{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  20%{transform:translateY(-6px) rotate(-4deg)}
+  40%{transform:translateY(-10px) rotate(3deg)}
+  60%{transform:translateY(-8px) rotate(-3deg)}
+  80%{transform:translateY(-4px) rotate(2deg)}
+}
+.bot-body.talking{animation:char-talk .35s ease-in-out infinite alternate}
+@keyframes char-talk{
+  0%{transform:translateY(0)}
+  100%{transform:translateY(-3px)}
+}
 
-/* SVG eye blink */
-.eye-inner{transform-origin:center;animation:eye-blink 5s ease-in-out infinite}
-@keyframes eye-blink{0%,90%,100%{transform:scaleY(1)}93%,97%{transform:scaleY(.05)}}
-.eye-inner-r{animation-delay:0.08s}
-/* chest pulse */
-.chest-light{animation:chest-pulse 2.2s ease-in-out infinite}
-@keyframes chest-pulse{0%,100%{opacity:.55;r:5}50%{opacity:1;r:6.5}}
+/* ── Eye blink ── */
+.eyelid{
+  transition:ry .08s ease-in-out;
+  pointer-events:none;
+}
+/* ── Mouth talk ── */
+#mouth-idle{transition:opacity .15s}
+#mouth-open-path{transition:opacity .15s}
+#jaw{transition:transform .12s ease-in-out;transform-origin:100px 130px}
+/* ── Right arm wave ── */
+#rarm{transform-origin:148px 185px;transition:transform .2s ease}
+.bot-body.wave #rarm{animation:arm-wave 1.6s ease-in-out}
+@keyframes arm-wave{
+  0%,100%{transform:rotate(0deg)}
+  20%{transform:rotate(-45deg)}
+  40%{transform:rotate(-65deg)}
+  60%{transform:rotate(-45deg)}
+  80%{transform:rotate(-20deg)}
+}
+/* ── Shadow under character ── */
+.char-shadow{
+  width:90px;height:14px;
+  background:radial-gradient(ellipse,rgba(147,51,234,.25) 0%,transparent 70%);
+  margin:0 auto;margin-top:-4px;
+}
 
 /* ── Audio toggle ── */
 #audio-btn{
@@ -1116,45 +1143,209 @@ body:has(button:hover) #c-ring{transform:translate(-50%,-50%) scale(.6);border-c
     <div class="bot-bubble-text" id="bot-text"></div>
   </div>
   <div class="bot-body" id="bot-body" title="Click to replay narration">
-    <svg viewBox="0 0 80 96" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
-      <!-- antenna -->
-      <line x1="40" y1="14" x2="40" y2="4" stroke="#9333ea" stroke-width="2.5" stroke-linecap="round"/>
-      <circle cx="40" cy="3" r="3.5" fill="#d946ef"/>
-      <circle cx="40" cy="3" r="6" fill="#d946ef" fill-opacity=".2"/>
-      <!-- head -->
-      <rect x="10" y="16" width="60" height="46" rx="14" fill="#1c1c1c" stroke="#9333ea" stroke-width="1.5"/>
-      <!-- head glow -->
-      <rect x="10" y="16" width="60" height="46" rx="14" fill="url(#hg)" opacity=".5"/>
-      <!-- eye sockets -->
-      <circle cx="28" cy="34" r="8" fill="#0C0C0C"/>
-      <circle cx="52" cy="34" r="8" fill="#0C0C0C"/>
-      <!-- eyes -->
-      <circle cx="28" cy="34" r="5" fill="#9333ea" class="eye-inner"/>
-      <circle cx="52" cy="34" r="5" fill="#9333ea" class="eye-inner eye-inner-r"/>
-      <!-- eye shine -->
-      <circle cx="30" cy="32" r="1.5" fill="#fff" opacity=".8"/>
-      <circle cx="54" cy="32" r="1.5" fill="#fff" opacity=".8"/>
-      <!-- mouth -->
-      <path d="M26 50 Q40 59 54 50" fill="none" stroke="#9333ea" stroke-width="2" stroke-linecap="round" id="bot-mouth"/>
-      <!-- body -->
-      <rect x="18" y="64" width="44" height="28" rx="10" fill="#1c1c1c" stroke="#9333ea" stroke-width="1.5"/>
-      <!-- chest panel -->
-      <rect x="26" y="70" width="28" height="16" rx="5" fill="#0C0C0C" stroke="#333" stroke-width="1"/>
-      <!-- chest light -->
-      <circle cx="40" cy="78" r="5" fill="#d946ef" class="chest-light"/>
-      <!-- arms -->
-      <rect x="2" y="66" width="13" height="9" rx="4.5" fill="#1c1c1c" stroke="#9333ea" stroke-width="1.5"/>
-      <rect x="65" y="66" width="13" height="9" rx="4.5" fill="#1c1c1c" stroke="#9333ea" stroke-width="1.5"/>
-      <!-- legs -->
-      <rect x="22" y="93" width="12" height="3" rx="1.5" fill="#9333ea" opacity=".4"/>
-      <rect x="46" y="93" width="12" height="3" rx="1.5" fill="#9333ea" opacity=".4"/>
+    <svg viewBox="0 0 200 310" xmlns="http://www.w3.org/2000/svg" width="140" height="217" aria-label="Guide character">
       <defs>
-        <radialGradient id="hg" cx="50%" cy="30%" r="60%">
-          <stop offset="0%" stop-color="#9333ea" stop-opacity=".15"/>
+        <!-- skin gradient -->
+        <radialGradient id="sk" cx="42%" cy="30%" r="68%">
+          <stop offset="0%" stop-color="#FFCFAA"/>
+          <stop offset="60%" stop-color="#F5AD7C"/>
+          <stop offset="100%" stop-color="#E8956A"/>
+        </radialGradient>
+        <!-- dark skin shadow areas -->
+        <radialGradient id="sk2" cx="50%" cy="80%" r="50%">
+          <stop offset="0%" stop-color="#D4845A" stop-opacity=".4"/>
+          <stop offset="100%" stop-color="#D4845A" stop-opacity="0"/>
+        </radialGradient>
+        <!-- hair gradient -->
+        <linearGradient id="hg" x1="0.3" y1="0" x2="0.7" y2="1">
+          <stop offset="0%" stop-color="#3D1F0A"/>
+          <stop offset="55%" stop-color="#1E0A00"/>
+          <stop offset="100%" stop-color="#0D0400"/>
+        </linearGradient>
+        <!-- hair shine -->
+        <radialGradient id="hsh" cx="38%" cy="22%" r="35%">
+          <stop offset="0%" stop-color="#6B3E1A" stop-opacity=".7"/>
+          <stop offset="100%" stop-color="#6B3E1A" stop-opacity="0"/>
+        </radialGradient>
+        <!-- jacket -->
+        <linearGradient id="jk" x1="0" y1="0" x2="0.5" y2="1">
+          <stop offset="0%" stop-color="#1A0B3A"/>
+          <stop offset="100%" stop-color="#0D0520"/>
+        </linearGradient>
+        <!-- jacket highlight -->
+        <linearGradient id="jkh" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#9333ea" stop-opacity=".18"/>
+          <stop offset="50%" stop-color="#9333ea" stop-opacity=".04"/>
+          <stop offset="100%" stop-color="#9333ea" stop-opacity=".18"/>
+        </linearGradient>
+        <!-- shirt -->
+        <linearGradient id="sh" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#7c3aed"/>
+          <stop offset="100%" stop-color="#5b21b6"/>
+        </linearGradient>
+        <!-- eye iris -->
+        <radialGradient id="iris" cx="40%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#6B4E3D"/>
+          <stop offset="55%" stop-color="#3D2010"/>
+          <stop offset="100%" stop-color="#180800"/>
+        </radialGradient>
+        <!-- ambient body glow -->
+        <radialGradient id="glow" cx="50%" cy="0%" r="80%">
+          <stop offset="0%" stop-color="#9333ea" stop-opacity=".12"/>
           <stop offset="100%" stop-color="#9333ea" stop-opacity="0"/>
         </radialGradient>
       </defs>
+
+      <!-- ── BODY / JACKET ── -->
+      <!-- torso base -->
+      <path d="M10 310 L10 202 Q28 186 70 178 L82 162 L100 170 L118 162 L130 178 Q172 186 190 202 L190 310 Z" fill="url(#jk)"/>
+      <!-- jacket sheen -->
+      <path d="M10 310 L10 202 Q28 186 70 178 L82 162 L100 170 L118 162 L130 178 Q172 186 190 202 L190 310 Z" fill="url(#jkh)"/>
+      <!-- jacket left lapel -->
+      <path d="M82 162 L100 190 L86 178 Z" fill="url(#sh)" opacity=".9"/>
+      <!-- jacket right lapel -->
+      <path d="M118 162 L100 190 L114 178 Z" fill="url(#sh)" opacity=".9"/>
+      <!-- shirt visible between lapels -->
+      <path d="M86 178 L100 190 L114 178 L100 200 Z" fill="url(#sh)" opacity=".7"/>
+      <!-- jacket seam lines -->
+      <line x1="100" y1="190" x2="100" y2="310" stroke="#9333ea" stroke-width=".6" stroke-opacity=".15"/>
+      <!-- left chest pocket -->
+      <rect x="32" y="212" width="22" height="15" rx="4" fill="#9333ea" opacity=".2"/>
+      <rect x="32" y="212" width="22" height="15" rx="4" fill="none" stroke="#9333ea" stroke-width=".8" stroke-opacity=".4"/>
+      <!-- badge / purple glow pin -->
+      <circle cx="66" cy="220" r="4.5" fill="#d946ef" opacity=".8"/>
+      <circle cx="66" cy="220" r="7" fill="#d946ef" opacity=".12"/>
+
+      <!-- ── NECK ── -->
+      <rect x="88" y="154" width="24" height="24" rx="9" fill="url(#sk)"/>
+      <!-- neck shadow -->
+      <rect x="88" y="154" width="24" height="8" rx="4" fill="#C4724A" opacity=".25"/>
+
+      <!-- ── LEFT EAR ── -->
+      <ellipse cx="36" cy="94" rx="10.5" ry="14" fill="url(#sk)"/>
+      <ellipse cx="38" cy="94" rx="6" ry="9" fill="#D4845A" opacity=".5"/>
+      <path d="M37 86 Q34 94 37 102" stroke="#C07050" stroke-width="1.2" fill="none" stroke-opacity=".4"/>
+
+      <!-- ── RIGHT EAR ── -->
+      <ellipse cx="164" cy="94" rx="10.5" ry="14" fill="url(#sk)"/>
+      <ellipse cx="162" cy="94" rx="6" ry="9" fill="#D4845A" opacity=".5"/>
+      <path d="M163 86 Q166 94 163 102" stroke="#C07050" stroke-width="1.2" fill="none" stroke-opacity=".4"/>
+
+      <!-- ── HEAD ── -->
+      <ellipse cx="100" cy="88" rx="62" ry="72" fill="url(#sk)"/>
+      <!-- chin shadow -->
+      <ellipse cx="100" cy="152" rx="38" ry="7" fill="url(#sk2)"/>
+      <!-- side face shading -->
+      <ellipse cx="44" cy="95" rx="16" ry="28" fill="#D4845A" opacity=".12"/>
+      <ellipse cx="156" cy="95" rx="16" ry="28" fill="#D4845A" opacity=".12"/>
+
+      <!-- ── HAIR BACK LAYER ── -->
+      <path d="M38 88 Q36 22 100 14 Q164 22 162 88 Q156 18 100 20 Q44 18 38 88Z" fill="url(#hg)"/>
+
+      <!-- ── HAIR FRONT STYLED ── -->
+      <!-- main hair shape -->
+      <path d="M38 82 Q40 20 100 14 Q160 20 162 82
+               Q158 38 138 26 Q120 16 100 18 Q80 16 62 26 Q42 38 38 82Z" fill="url(#hg)"/>
+      <!-- side swoosh left -->
+      <path d="M38 82 Q44 38 62 26 Q52 42 50 60 Q46 70 38 82Z" fill="#200A00" opacity=".5"/>
+      <!-- side swoosh right -->
+      <path d="M162 82 Q156 38 138 26 Q148 42 150 60 Q154 70 162 82Z" fill="#200A00" opacity=".5"/>
+      <!-- top hair shine -->
+      <path d="M72 16 Q95 10 120 18 Q100 13 72 16Z" fill="url(#hsh)"/>
+      <!-- forelock / fringe detail -->
+      <path d="M72 26 Q85 18 100 18 Q86 22 76 30 Z" fill="#3D1F0A" opacity=".7"/>
+      <path d="M100 18 Q115 18 128 26 Q118 22 100 18Z" fill="#3D1F0A" opacity=".5"/>
+
+      <!-- ── EYEBROWS ── -->
+      <path d="M62 69 Q72 62 86 65" stroke="#2A1200" stroke-width="3.8" stroke-linecap="round" fill="none"/>
+      <path d="M114 65 Q128 62 138 69" stroke="#2A1200" stroke-width="3.8" stroke-linecap="round" fill="none"/>
+      <!-- eyebrow arch highlight -->
+      <path d="M63 68 Q73 62 86 65" stroke="#5A3010" stroke-width="1" stroke-linecap="round" fill="none" opacity=".5"/>
+
+      <!-- ── LEFT EYE ── -->
+      <!-- white -->
+      <ellipse cx="75" cy="86" rx="13" ry="14" fill="white"/>
+      <!-- shadow at corner -->
+      <ellipse cx="75" cy="86" rx="13" ry="14" fill="#E8D5C0" opacity=".12"/>
+      <!-- iris -->
+      <circle cx="76" cy="87" r="9.5" fill="url(#iris)"/>
+      <!-- pupil -->
+      <circle cx="76" cy="87" r="5.5" fill="#0D0400"/>
+      <!-- pupil depth -->
+      <circle cx="76" cy="87" r="3" fill="#050100"/>
+      <!-- catch light large -->
+      <circle cx="80" cy="83" r="2.8" fill="white" opacity=".92"/>
+      <!-- catch light small -->
+      <circle cx="72" cy="91" r="1.3" fill="white" opacity=".45"/>
+      <!-- top lid shadow -->
+      <ellipse cx="75" cy="76" rx="13" ry="4" fill="#C07040" opacity=".18"/>
+      <!-- eyelid (blink) -->
+      <ellipse id="lid-l" cx="75" cy="86" rx="13" ry="1.5" fill="url(#sk)" class="eyelid"/>
+
+      <!-- ── RIGHT EYE ── -->
+      <ellipse cx="125" cy="86" rx="13" ry="14" fill="white"/>
+      <ellipse cx="125" cy="86" rx="13" ry="14" fill="#E8D5C0" opacity=".12"/>
+      <circle cx="124" cy="87" r="9.5" fill="url(#iris)"/>
+      <circle cx="124" cy="87" r="5.5" fill="#0D0400"/>
+      <circle cx="124" cy="87" r="3" fill="#050100"/>
+      <circle cx="128" cy="83" r="2.8" fill="white" opacity=".92"/>
+      <circle cx="120" cy="91" r="1.3" fill="white" opacity=".45"/>
+      <ellipse cx="125" cy="76" rx="13" ry="4" fill="#C07040" opacity=".18"/>
+      <ellipse id="lid-r" cx="125" cy="86" rx="13" ry="1.5" fill="url(#sk)" class="eyelid"/>
+
+      <!-- ── NOSE ── -->
+      <path d="M96 106 Q100 120 104 106" stroke="#C47248" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <!-- nostrils -->
+      <path d="M91 118 Q100 124 109 118" stroke="#C47248" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+      <circle cx="93" cy="119" r="2.5" fill="#B85C3A" opacity=".35"/>
+      <circle cx="107" cy="119" r="2.5" fill="#B85C3A" opacity=".35"/>
+
+      <!-- ── CHEEKS ── -->
+      <ellipse cx="55" cy="108" rx="13" ry="8" fill="#FF9080" opacity=".2"/>
+      <ellipse cx="145" cy="108" rx="13" ry="8" fill="#FF9080" opacity=".2"/>
+
+      <!-- ── MOUTH ── -->
+      <!-- idle smile -->
+      <path id="mouth-idle" d="M80 128 Q90 138 100 139 Q110 138 120 128" stroke="#B85030" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- upper lip line -->
+      <path d="M84 126 Q92 122 100 123 Q108 122 116 126" stroke="#A04028" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".6"/>
+      <!-- talking jaw / open mouth -->
+      <g id="jaw">
+        <path id="mouth-open-path" d="M82 128 Q88 142 100 146 Q112 142 118 128 Q110 136 100 137 Q90 136 82 128Z" fill="#7A1A1A" opacity="0"/>
+        <!-- teeth top -->
+        <path id="teeth-top" d="M84 126 Q91 130 100 131 Q109 130 116 126" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" opacity="0"/>
+        <!-- teeth bottom  -->
+        <path id="teeth-bot" d="M84 138 Q91 143 100 144 Q109 143 116 138" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" opacity="0"/>
+        <!-- tongue hint -->
+        <ellipse id="tongue" cx="100" cy="140" rx="8" ry="3.5" fill="#D4504A" opacity="0"/>
+      </g>
+
+      <!-- ── LEFT ARM ── -->
+      <path id="larm" d="M28 205 Q6 230 10 265 Q14 278 28 276 Q40 274 44 258 Q48 238 38 208Z" fill="url(#jk)"/>
+      <!-- left sleeve highlight -->
+      <path d="M28 205 Q20 225 18 248" stroke="#9333ea" stroke-width=".8" stroke-opacity=".2" fill="none"/>
+      <!-- left hand -->
+      <ellipse cx="20" cy="272" rx="13" ry="11" fill="url(#sk)"/>
+      <!-- fingers hint left -->
+      <path d="M10 272 Q14 264 20 262 Q26 264 30 272" fill="#E8956A" opacity=".4"/>
+
+      <!-- ── RIGHT ARM ── -->
+      <g id="rarm">
+        <path d="M172 205 Q194 230 190 265 Q186 278 172 276 Q160 274 156 258 Q152 238 162 208Z" fill="url(#jk)"/>
+        <!-- right sleeve highlight -->
+        <path d="M172 205 Q180 225 182 248" stroke="#9333ea" stroke-width=".8" stroke-opacity=".2" fill="none"/>
+        <!-- right hand -->
+        <ellipse cx="180" cy="272" rx="13" ry="11" fill="url(#sk)"/>
+        <!-- fingers hint right -->
+        <path d="M170 272 Q174 264 180 262 Q186 264 190 272" fill="#E8956A" opacity=".4"/>
+      </g>
+
+      <!-- ── JACKET BOTTOM EDGE ── -->
+      <path d="M10 310 Q10 298 18 294 Q100 285 182 294 Q190 298 190 310Z" fill="#0D0520" opacity=".6"/>
+      <!-- glow at bottom -->
+      <path d="M10 310 L190 310 L190 295 Q100 280 10 295Z" fill="url(#glow)"/>
     </svg>
+    <div class="char-shadow"></div>
   </div>
 </div>
 
@@ -1275,13 +1466,34 @@ function art(id,type){
 art('cv1',1);art('cv2',2);art('cv3',3);
 
 /* ════════════════════════════════════════
-   DATABOT — ANIMATED CHARACTER + NARRATION
+   GUIDE CHARACTER — ANIMATED BOY + NARRATION
 ════════════════════════════════════════ */
 const botBody    = document.getElementById('bot-body');
 const botBubble  = document.getElementById('bot-bubble');
 const botText    = document.getElementById('bot-text');
 const botClose   = document.getElementById('bot-close');
-const botMouth   = document.getElementById('bot-mouth');
+
+/* Mouth elements */
+const mouthIdle  = document.getElementById('mouth-idle');
+const mouthOpen  = document.getElementById('mouth-open-path');
+const teethTop   = document.getElementById('teeth-top');
+const teethBot   = document.getElementById('teeth-bot');
+const tongue     = document.getElementById('tongue');
+
+/* Eye blink via JS interval */
+const lidL = document.getElementById('lid-l');
+const lidR = document.getElementById('lid-r');
+
+function blinkEyes() {
+  [lidL, lidR].forEach(lid => {
+    lid.setAttribute('ry','14'); // closed
+    setTimeout(() => lid.setAttribute('ry','1.5'), 110); // open
+  });
+}
+// random blink every 3-6s
+(function scheduleBlink(){
+  setTimeout(()=>{ blinkEyes(); scheduleBlink(); }, 3000 + Math.random()*3000);
+})();
 
 /* Section scripts — what DataBot says in each section */
 const SCRIPTS = {
@@ -1337,11 +1549,38 @@ function showBubble(sectionId) {
   speak(msg);
 }
 
-/* ── Bot mouth expressions ── */
+/* ── Mouth expressions ── */
+let talkInterval = null;
+
 function setBotMood(mood) {
-  if (mood === 'talk')   botMouth.setAttribute('d','M26 50 Q40 56 54 50');
-  if (mood === 'smile')  botMouth.setAttribute('d','M26 50 Q40 59 54 50');
-  if (mood === 'idle')   botMouth.setAttribute('d','M30 52 Q40 54 50 52');
+  clearInterval(talkInterval);
+  if (mood === 'idle') {
+    mouthIdle.style.opacity = '1';
+    mouthOpen.style.opacity = '0';
+    teethTop.style.opacity  = '0';
+    teethBot.style.opacity  = '0';
+    tongue.style.opacity    = '0';
+  }
+  if (mood === 'smile') {
+    mouthIdle.setAttribute('d','M80 128 Q90 140 100 141 Q110 140 120 128');
+    mouthIdle.style.opacity = '1';
+    mouthOpen.style.opacity = '0';
+    teethTop.style.opacity  = '0';
+    teethBot.style.opacity  = '0';
+    tongue.style.opacity    = '0';
+  }
+  if (mood === 'talk') {
+    mouthIdle.style.opacity = '0';
+    // Animate mouth open/close while talking
+    let open = false;
+    talkInterval = setInterval(() => {
+      open = !open;
+      mouthOpen.style.opacity  = open ? '1' : '0';
+      teethTop.style.opacity   = open ? '1' : '0';
+      teethBot.style.opacity   = open ? '0.7' : '0';
+      tongue.style.opacity     = open ? '0.8' : '0';
+    }, 180);
+  }
 }
 
 /* ── Replay on click ── */
